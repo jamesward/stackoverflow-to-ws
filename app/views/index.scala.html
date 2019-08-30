@@ -26,6 +26,7 @@
 
             document.getElementById('questions').appendChild(question);
         };
+        ws.onerror = (error) => { console.log(error); document.getElementById('status').innerText = 'Query error' };
     </script>
 </head>
 <body>
