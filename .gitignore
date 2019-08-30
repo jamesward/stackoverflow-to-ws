@@ -1,0 +1,9 @@
+/target
+/.idea
+/*.iml
+/.idea_modules
+/.settings
+/logs
+/project/project
+/project/target
+.DS_Store
