@@ -10,3 +10,5 @@ libraryDependencies ++= Seq(
 )
 
 sources in (Compile,doc) := Seq.empty
+
+dockerBaseImage := "adoptopenjdk/openjdk8"
