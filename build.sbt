@@ -11,4 +11,8 @@ libraryDependencies ++= Seq(
 
 sources in (Compile,doc) := Seq.empty
 
+javaOptions in Universal ++= Seq(
+  "-Dpidfile.path=/dev/null"
+)
+
 dockerBaseImage := "adoptopenjdk/openjdk8"
