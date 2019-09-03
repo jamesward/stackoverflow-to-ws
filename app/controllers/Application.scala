@@ -37,9 +37,23 @@ class Application @Inject() extends InjectedController with Logging {
     }
   }
 
+  def tagsToArray(jsValue: JsValue): JsValue = {
+    jsValue.transform(
+      (__ \ "tags").json.update(
+        __.read[String].map { tags =>
+          JsArray(
+            tags.split("><").map { tag =>
+              JsString(tag.stripPrefix("<").stripSuffix(">"))
+            }
+          )
+        }
+      )
+    ).getOrElse(jsValue)
+  }
+
   def questions = WebSocket.acceptOrResult[JsValue, JsValue] { _ =>
     val query = """
-                  |SELECT CONCAT('https://stackoverflow.com/questions/', CAST(id as STRING)) as url, title, view_count, favorite_count
+                  |SELECT CONCAT('https://stackoverflow.com/questions/', CAST(id as STRING)) as url, title, tags, view_count, favorite_count
                   |FROM `bigquery-public-data.stackoverflow.posts_questions`
                   |ORDER BY favorite_count DESC
                   |""".stripMargin
@@ -49,7 +63,7 @@ class Application @Inject() extends InjectedController with Logging {
       Future.successful(Left(InternalServerError(t.getMessage)))
     }, { case (schema, questions) =>
       val questionSource = Source.fromIterator(() => questions.iterator)
-      val source = Source.tick(Duration.Zero, 1.second, schema).zip(questionSource).map(Json.toJson(_))
+      val source = Source.tick(Duration.Zero, 1.second, schema).zip(questionSource).map(Json.toJson(_)).map(tagsToArray)
       Future.successful(Right(Flow.fromSinkAndSource(Sink.ignore, source)))
     })
   }
