@@ -56,6 +56,7 @@ class Application @Inject() extends InjectedController with Logging {
                   |SELECT CONCAT('https://stackoverflow.com/questions/', CAST(id as STRING)) as url, title, body, tags, view_count, favorite_count
                   |FROM `bigquery-public-data.stackoverflow.posts_questions`
                   |ORDER BY favorite_count DESC
+                  |LIMIT 100000
                   |""".stripMargin
 
     StackOverflowBigQuery.query(query).fold({ t =>
@@ -79,7 +80,7 @@ object StackOverflowBigQuery {
     Try {
       val bigQuery = BigQueryOptions.getDefaultInstance.getService
       val jobId = JobId.of(UUID.randomUUID().toString)
-      val queryConfig = QueryJobConfiguration.newBuilder(query).setUseLegacySql(false).setAllowLargeResults(true).build()
+      val queryConfig = QueryJobConfiguration.newBuilder(query).setUseLegacySql(false).build()
       val queryJob = bigQuery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build())
       queryJob.waitFor()
       val page = queryJob.getQueryResults(BigQuery.QueryResultsOption.pageSize(1))
