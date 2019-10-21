@@ -79,7 +79,7 @@ object StackOverflowBigQuery {
     Try {
       val bigQuery = BigQueryOptions.getDefaultInstance.getService
       val jobId = JobId.of(UUID.randomUUID().toString)
-      val queryConfig = QueryJobConfiguration.newBuilder(query).setUseLegacySql(false).build()
+      val queryConfig = QueryJobConfiguration.newBuilder(query).setUseLegacySql(false).setAllowLargeResults(true).build()
       val queryJob = bigQuery.create(JobInfo.newBuilder(queryConfig).setJobId(jobId).build())
       queryJob.waitFor()
       val page = queryJob.getQueryResults(BigQuery.QueryResultsOption.pageSize(1))
