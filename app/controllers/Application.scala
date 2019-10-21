@@ -53,7 +53,7 @@ class Application @Inject() extends InjectedController with Logging {
 
   def questions = WebSocket.acceptOrResult[JsValue, JsValue] { _ =>
     val query = """
-                  |SELECT CONCAT('https://stackoverflow.com/questions/', CAST(id as STRING)) as url, title, tags, view_count, favorite_count
+                  |SELECT CONCAT('https://stackoverflow.com/questions/', CAST(id as STRING)) as url, title, body, tags, view_count, favorite_count
                   |FROM `bigquery-public-data.stackoverflow.posts_questions`
                   |ORDER BY favorite_count DESC
                   |""".stripMargin
