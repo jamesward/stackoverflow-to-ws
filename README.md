@@ -10,5 +10,19 @@ export GOOGLE_APPLICATION_CREDENTIALS=path/to/your/creds.json
 ./sbt ~run
 ```
 
-Visit: [http://localhost:9000](http://localhost:9000)
+Run Locally with Containers:
 
+```
+export GOOGLE_APPLICATION_CREDENTIALS=path/to/your/creds.json
+
+pack build stackoverflow-to-ws
+
+docker run -it \
+  -v $GOOGLE_APPLICATION_CREDENTIALS:/home/user.json \
+  -e GOOGLE_APPLICATION_CREDENTIALS=/home/user.json \
+  -e APPLICATION_SECRET=$(tr -dc A-Za-z0-9 </dev/urandom | head -c 32) \
+  -e PORT=9000 -p 9000:9000 \
+  stackoverflow-to-ws
+```
+
+Visit: [http://localhost:9000](http://localhost:9000)
