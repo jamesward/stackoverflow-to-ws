@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+layers_dir="$1"
+
+./sbt stage
+
+stagingDir=$(./sbt "Universal / stagingDirectory" | tail -n 1 | cut -c8-)
+executableScriptName=$(./sbt executableScriptName | tail -n 1 | cut -c8-)
+
+cat >> "${layers_dir}/launch.toml" <<EOL
+[[processes]]
+type = "web"
+command = "$stagingDir/bin/$executableScriptName"
+EOL

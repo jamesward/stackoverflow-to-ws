@@ -1,0 +1,9 @@
+api = "0.2"
+
+[buildpack]
+id = "sbt"
+version = "0.0.1"
+name = "sbt"
+
+[[stacks]]
+id = "google"
