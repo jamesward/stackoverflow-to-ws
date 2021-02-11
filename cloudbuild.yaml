@@ -26,6 +26,6 @@ steps:
       - 'IMAGE_NAME=$REPO_NAME'
       - 'IMAGE_VERSION=$COMMIT_SHA'
       - 'REGION=us-central1'
-      - 'DEPLOY_OPTS="--cpu=2 --timeout=1h"
+      - 'DEPLOY_OPTS="--cpu=2 --timeout=1h"'
 
 images: ['gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA']
